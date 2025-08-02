@@ -88,10 +88,6 @@ app.post("/guardar", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-});
-
 app.get("/descargar-excel", (req, res) => {
   res.download(excelPath, "Datos_Formulario.xlsx", (err) => {
     if (err) {
@@ -101,3 +97,6 @@ app.get("/descargar-excel", (req, res) => {
   });
 });
 
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+});
