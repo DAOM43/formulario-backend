@@ -11,7 +11,7 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
-const excelPath = path.join(os.homedir(), "Desktop", "registros.xlsx");
+const excelPath = path.join(__dirname, "registros.xlsx");
 const hojaNombre = "Formulario";
 
 async function guardarRegistro(data) {
@@ -91,3 +91,13 @@ app.post("/guardar", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
+
+app.get("/descargar-excel", (req, res) => {
+  res.download(excelPath, "Datos_Formulario.xlsx", (err) => {
+    if (err) {
+      console.error("❌ Error al enviar el archivo:", err.message);
+      res.status(500).send("Error al descargar el archivo.");
+    }
+  });
+});
+
