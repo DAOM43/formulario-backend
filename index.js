@@ -3,6 +3,7 @@ const cors = require("cors");
 const ExcelJS = require("exceljs");
 const fs = require("fs");
 const path = require("path");
+const os = require("os"); 
 
 const app = express();
 const PORT = 3001;
@@ -10,7 +11,7 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
-const excelPath = path.join(__dirname, "excel", "registros.xlsx");
+const excelPath = path.join(os.homedir(), "Desktop", "registros.xlsx");
 const hojaNombre = "Formulario";
 
 async function guardarRegistro(data) {
@@ -21,7 +22,6 @@ async function guardarRegistro(data) {
     await workbook.xlsx.readFile(excelPath);
     worksheet = workbook.getWorksheet(hojaNombre);
 
-    // Si no existe la hoja, la crea
     if (!worksheet) {
       worksheet = workbook.addWorksheet(hojaNombre);
       worksheet.addRow([
@@ -29,14 +29,12 @@ async function guardarRegistro(data) {
       ]);
     }
   } else {
-    // Crear nuevo archivo y hoja
     worksheet = workbook.addWorksheet(hojaNombre);
     worksheet.addRow([
       "Nombre", "Apellido", "Deporte favorito", "Género", "Departamento", "Mayor de 21", "Modelos de autos"
     ]);
   }
 
-  // Añadir nueva fila
   worksheet.addRow([
     data.nombre,
     data.apellido,
@@ -47,7 +45,7 @@ async function guardarRegistro(data) {
     data.autos
   ]);
 
-  // Ajustar automáticamente el ancho de las columnas
+  // Ajuste automático de columnas
   worksheet.columns.forEach(col => {
     let maxLength = 10;
     col.eachCell({ includeEmpty: true }, cell => {
@@ -57,7 +55,7 @@ async function guardarRegistro(data) {
     col.width = maxLength + 2;
   });
 
-  // Estilo: bordes y negrita para encabezado
+  // Encabezado con estilo
   const headerRow = worksheet.getRow(1);
   headerRow.font = { bold: true };
   headerRow.eachCell(cell => {
